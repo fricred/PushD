@@ -5,7 +5,7 @@
  */
 // index.ts
 export function helloWorld() {
-  return 'Hello World';
+  return 'Hello World edited';
 }
 
 // Example call
