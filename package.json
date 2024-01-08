@@ -40,5 +40,11 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "commander": "^11.1.0"
+  },
+  "bin": {
+    "pushd": "./lib/cli.js"
   }
 }
