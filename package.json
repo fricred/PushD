@@ -1,0 +1,31 @@
+{
+  "name": "@fricred/pushd",
+  "version": "1.0.0",
+  "description": "A lightweight npm package that automatically generates and updates code documentation during the pre-push Git hook, ensuring up-to-date documentation with every push.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fricred/PushD.git"
+  },
+  "keywords": [
+    "documentation",
+    "pre-push",
+    "git-hook",
+    "code-docs",
+    "auto-doc",
+    "nodejs",
+    "version-control",
+    "git",
+    "commit",
+    "source-code"
+  ],
+  "author": "Jeisson Huerfano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fricred/PushD/issues"
+  },
+  "homepage": "https://github.com/fricred/PushD#readme"
+}
