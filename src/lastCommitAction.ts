@@ -1,20 +1,38 @@
 // lastCommitAction.ts
+
 import shell from 'shelljs';
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync } from 'fs';
 
-export function generateLastCommitDocs() {
-  console.log('Generating documentation for the last commit...');
+// Load the configuration from the config.json file
+const config = JSON.parse(readFileSync('config.json', 'utf-8'));
 
-  // Get the hash of the last commit
-  const lastCommitHash = shell.exec('git rev-parse HEAD', { silent: true }).trim();
+// Define default includedDirectories and allowedExtensions arrays
+const includedDirectories: string[] = config.includedDirectories || [];
+const allowedExtensions: string[] = config.allowedExtensions || [];
 
-  // List all files in the project (modify the path as needed)
-  const files = shell.ls('-A'); // List all files in the current directory
+export function generateDocumentationForLastCommit() {
+  console.log('Generating documentation for files involved in the last commit...');
 
-  // Add the header to each file
-  files.forEach((file) => {
+  // Get the list of changed files that are part of the upcoming push
+  const changedFiles = shell
+    .exec('git diff --cached --name-only', { silent: true })
+    .trim()
+    .split('\n');
+
+  // Filter files based on includedDirectories and allowedExtensions
+  const filteredFiles = changedFiles.filter((file) => {
+    // Check if the file is in one of the included directories
+    const isIncludedDirectory = includedDirectories.some((dir: string) => file.startsWith(dir));
+
+    // Check if the file has an allowed extension
+    const hasAllowedExtension = allowedExtensions.some((ext: string) => file.endsWith(ext));
+
+    return isIncludedDirectory && hasAllowedExtension;
+  });
+
+  filteredFiles.forEach((file) => {
     // Read the file content
-    const content = shell.cat(file);
+    const content = readFileSync(file, 'utf-8');
 
     // Add the header text
     const updatedContent = `#test\n${content}`;
@@ -23,5 +41,5 @@ export function generateLastCommitDocs() {
     writeFileSync(file, updatedContent);
   });
 
-  console.log('Documentation generated for the last commit.');
+  console.log('Documentation generated for files involved in the last commit.');
 }

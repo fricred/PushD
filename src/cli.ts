@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { program } from 'commander';
 import { readFileSync } from 'fs';
-import { generateLastCommitDocs } from './lastCommitAction';
+import { generateDocumentationForLastCommit } from './lastCommitAction';
 // Read the package.json file
 const packageJson = JSON.parse(readFileSync(__dirname + '/../package.json', 'utf-8'));
 
@@ -12,7 +12,7 @@ program
   .description('Generate documentation for the last commit')
   .action(() => {
     console.log('Generating documentation for the last commit...');
-    generateLastCommitDocs();
+    generateDocumentationForLastCommit();
   });
 
 program
