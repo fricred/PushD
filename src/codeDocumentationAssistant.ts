@@ -21,7 +21,6 @@ test('helloWorld returns "Hello World"', () => {
  * @returns {string} - The updated documentation.
  */
 export async function generateOrUpdateDocumentation(codeSnippet: string): Promise<string> {
-  console.log('🚀 ~ generateOrUpdateDocumentation ~ codeSnippet:', codeSnippet);
   try {
     const output = await ollama.generate(codeSnippet);
     console.log('🚀 ~ generateOrUpdateDocumentation ~ output:', output);
