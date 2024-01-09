@@ -62,22 +62,25 @@ export function generateDocumentationForLastCommit() {
 
     return isIncludedDirectory && hasAllowedExtension;
   });
-
-  initialize().then(() => {
+  console.log('🚀 ~ filteredFiles.forEach ~ filteredFiles:', filteredFiles);
+  initialize().then(async () => {
     console.log('Ollama initialized');
-
-    filteredFiles.forEach((file) => {
-      console.log('🚀 ~ filteredFiles.forEach ~ file:', file);
-      // Read the file content
-      const content = readFileSync(file, 'utf-8');
-
-      // Call the function from codeDocumentationAssistant.ts to update documentation
-      generateOrUpdateDocumentation(content).then((updatedContent) => {
-        // Write the updated content back to the file
+    const pLimit = (await import('p-limit')).default;
+    // Limit the number of promises to 2
+    const limit = pLimit(2);
+    // Create an array of promises using map
+    const promises = filteredFiles.map((file) =>
+      limit(async () => {
+        const content = readFileSync(file, 'utf-8');
+        const updatedContent = await generateOrUpdateDocumentation(content);
         writeFileSync(file, updatedContent);
-      });
-    });
+        console.log(`Documentation updated for ${file}`);
+      })
+    );
 
-    console.log('Documentation generated for files involved in the upcoming push.');
+    // Use Promise.all to handle all the promises
+    Promise.all(promises).then(() => {
+      console.log('All documentation generated.');
+    });
   });
 }
