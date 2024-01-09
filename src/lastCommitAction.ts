@@ -69,7 +69,7 @@ export function generateDocumentationForLastCommit() {
     // Limit the number of promises to 2
     const limit = pLimit(1);
     // Create an array of promises using map
-    const promises = filteredFiles.map((file) =>
+    const promises = [filteredFiles[0]].map((file) =>
       limit(async () => {
         const content = readFileSync(file, 'utf-8');
         const updatedContent = await generateOrUpdateDocumentation(content);
