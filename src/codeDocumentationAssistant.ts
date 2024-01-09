@@ -12,12 +12,7 @@ const ollama = new Ollama();
 export async function generateOrUpdateDocumentation(codeSnippet: string): Promise<string> {
   try {
     const output = await ollama.generate(codeSnippet);
-    console.log('🚀 ~ generateOrUpdateDocumentation ~ output:', output);
-    if (containsCodeBlock(output.output)) {
-      return extractCodeSnippet(output.output);
-    } else {
-      return output.output;
-    }
+    return output.output;
   } catch (error) {
     console.error(`Error updating documentation: ${error}`);
     return codeSnippet; // Return the original content in case of an error
@@ -35,11 +30,13 @@ export async function initialize(): Promise<void> {
     console.error(`Error in initialization: ${error}`);
   }
 }
+
 /**
  * Extracts the code snippet from the Ollama-generated documentation.
  * @param {string} documentation - The Ollama-generated documentation.
  * @returns {string} - The extracted code snippet or an empty string if no code block is found.
  */
+/*
 function extractCodeSnippet(documentation: string): string {
   const codeSnippetRegex = /```(?:\w+)?\s*([\s\S]*?)\s*```/; // Enhanced regular expression to match code blocks with optional language identifiers
   const match = codeSnippetRegex.exec(documentation);
@@ -56,7 +53,9 @@ function extractCodeSnippet(documentation: string): string {
  * @param {string} documentation - The Ollama-generated documentation.
  * @returns {boolean} - True if a code block is found, false otherwise.
  */
+/*
 function containsCodeBlock(documentation: string): boolean {
   const codeSnippetRegex = /```(?:\w+)?\s*[\s\S]*?\s*```/; // Enhanced regular expression to match code blocks with optional language identifiers
   return codeSnippetRegex.test(documentation);
 }
+*/
