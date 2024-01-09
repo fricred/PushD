@@ -4,17 +4,6 @@ import { Ollama } from 'ollama-node';
 
 // Initialize the Ollama client
 const ollama = new Ollama();
-// Define the code snippet to be included in the system prompt
-const predefinedCodeSnippet = `
-\`\`\`typescript
-import { helloWorld } from './index';
-
-test('helloWorld returns "Hello World"', () => {
-  expect(helloWorld()).toBe('Hello World edited');
-});
-
-\`\`\`
-`;
 /**
  * Generate or update documentation for the provided code snippet.
  * @param {string} codeSnippet - The code snippet to document.
@@ -40,10 +29,7 @@ export async function initialize(): Promise<void> {
     // Set the Ollama model and parameters as needed
     await ollama.setModel('dolphin-mixtral');
     await ollama.setSystemPrompt(
-      `I want you to act as a code documentation assistant who directly incorporates inline comments into the provided code snippets. You will not provide any additional explanations or external commentary. Focus solely on updating the given code with clear, concise, and informative comments that explain the functionality and logic within the code itself. Ensure that your comments enhance the readability and understanding of the code, especially for those who may be new to the programming language in use.
-
-Here is an example code snippet:
-${predefinedCodeSnippet}`
+      `I want you to act as a code documentation assistant who directly incorporates inline comments into the provided code snippets. You will not provide any additional explanations or external commentary. Focus solely on updating the given code with clear, concise, and informative comments that explain the functionality and logic within the code itself. Ensure that your comments enhance the readability and understanding of the code, especially for those who may be new to the programming language in use.`
     );
   } catch (error) {
     console.error(`Error in initialization: ${error}`);
