@@ -67,7 +67,7 @@ export function generateDocumentationForLastCommit() {
     console.log('Ollama initialized');
     const pLimit = (await import('p-limit')).default;
     // Limit the number of promises to 2
-    const limit = pLimit(2);
+    const limit = pLimit(1);
     // Create an array of promises using map
     const promises = filteredFiles.map((file) =>
       limit(async () => {
