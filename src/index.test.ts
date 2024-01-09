@@ -1,4 +1,3 @@
-// index.test.ts
 import { helloWorld } from './index';
 
 test('helloWorld returns "Hello World"', () => {
