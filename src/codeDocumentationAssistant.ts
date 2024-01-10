@@ -1,10 +1,11 @@
 import { Ollama } from 'ollama-node';
 
-const ollama = new Ollama();
+const ollama = new Ollama('192.168.1.3');
 
 export async function generateOrUpdateDocumentation(codeSnippet: string): Promise<string> {
   try {
     const output = await ollama.generate(codeSnippet);
+    console.log('🚀 ~ generateOrUpdateDocumentation ~ output:', output);
     if (containsCodeBlock(output.output)) {
       return extractCodeSnippet(output.output);
     } else {
