@@ -2,7 +2,7 @@
 import { program } from 'commander';
 import { readFileSync } from 'fs';
 import { generateDocumentationForLastCommit } from './lastCommitAction';
-// Read the package.json file
+
 const packageJson = JSON.parse(readFileSync(__dirname + '/../package.json', 'utf-8'));
 
 program.version(packageJson.version).description('PushD - A tool for generating documentation');
