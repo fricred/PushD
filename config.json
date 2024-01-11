@@ -1,4 +1,0 @@
-{
-  "includedDirectories": ["src"],
-  "allowedExtensions": [".js", ".ts"]
-}

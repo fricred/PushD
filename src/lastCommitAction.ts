@@ -2,7 +2,10 @@ import shell from 'shelljs';
 import { writeFileSync, readFileSync } from 'fs';
 import { generateOrUpdateDocumentation, initialize } from './codeDocumentationAssistant'; // Import the function
 
-const config = JSON.parse(readFileSync('config.json', 'utf-8'));
+const config = {
+  includedDirectories: ['src'],
+  allowedExtensions: ['.js', '.ts'],
+};
 const includedDirectories: string[] = config.includedDirectories || [];
 const allowedExtensions: string[] = config.allowedExtensions || [];
 const RED = '\x1b[31m';
