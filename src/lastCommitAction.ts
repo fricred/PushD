@@ -56,8 +56,12 @@ export function generateDocumentationForLastCommit() {
       limit(async () => {
         const content = readFileSync(file, 'utf-8');
         const updatedContent = await generateOrUpdateDocumentation(content);
-        writeFileSync(file, updatedContent.trim());
-        console.log(`Documentation updated for ${file}`);
+        if (content.length < updatedContent.length) {
+          writeFileSync(file, updatedContent.trim());
+          console.log(`Documentation updated for ${file}`);
+        } else {
+          console.log(`No documentation updated for ${file}`);
+        }
       })
     );
     Promise.all(promises).then(() => {

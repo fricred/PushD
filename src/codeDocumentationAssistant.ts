@@ -3,12 +3,17 @@ import { Ollama } from 'ollama-node';
 const ollama = new Ollama('192.168.1.3');
 
 export async function generateOrUpdateDocumentation(codeSnippet: string): Promise<string> {
+  let temporaryCodeSnippet = codeSnippet;
   try {
-    const output = await ollama.generate(codeSnippet);
-    if (containsCodeBlock(output.output)) {
-      return extractCodeSnippet(output.output);
+    if (containsCodeBlock(codeSnippet)) {
+      temporaryCodeSnippet = codeSnippet.replaceAll('```', '{tripleBacktick}');
+    }
+    const output = await ollama.generate(temporaryCodeSnippet);
+    const response = output.output.replaceAll('{tripleBacktick}', '```');
+    if (containsCodeBlock(response)) {
+      return extractCodeSnippet(response);
     } else {
-      return output.output;
+      return response;
     }
   } catch (error) {
     console.error(`Error updating documentation: ${error}`);
@@ -19,7 +24,7 @@ export async function generateOrUpdateDocumentation(codeSnippet: string): Promis
 export async function initialize(): Promise<void> {
   try {
     await ollama.setModel('openchat');
-    const prompt = `As a code documentation assistant, your role is to add function-level documentation to code snippets from various programming languages without altering their original structure or content. Your focus should be on embedding inline documentation that explains each function's purpose, parameters, return values, and general operation. Follow a universal documentation style akin to JSDoc or JavaDoc, adaptable to different programming languages. The primary goal is to improve the readability and understanding of the code, especially for beginners in the programming language. Ensure that all parts of the code, including shebang lines (e.g., #!/usr/bin/env node), remain intact and unmodified. Your documentation should solely concentrate on elucidating the functionality and structure of the functions, providing clear, concise, and informative descriptions.`;
+    const prompt = `As a code documentation assistant, your task is to add block-level JSDoc-style documentation to JavaScript and TypeScript files, with specific constraints. Firstly, do not modify or comment on the shebang line #!/usr/bin/env node - this line must remain untouched. Secondly, avoid adding comments to import statements. Focus your documentation on the core functional parts of the code, such as key functions, class definitions, and significant logic blocks. Your documentation should succinctly describe the purpose, parameters, and functionality of these elements. Remember, the aim is to enhance understanding and readability for those unfamiliar with the codebase, without altering the original code structure or adding line-by-line commentary.`;
 
     await ollama.setSystemPrompt(prompt);
   } catch (error) {
