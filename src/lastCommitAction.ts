@@ -59,6 +59,9 @@ export function generateDocumentationForLastCommit() {
       limit(async () => {
         const content = readFileSync(file, 'utf-8');
         const updatedContent = await generateOrUpdateDocumentation(content);
+        console.log('🚀 ~ limit ~ updatedContent:', updatedContent);
+        console.log('🚀 ~ limit ~ content.length:', content.length);
+        console.log('🚀 ~ limit ~ content.length:', updatedContent.length);
         if (content.length < updatedContent.length) {
           writeFileSync(file, updatedContent.trim());
           console.log(`Documentation updated for ${file}`);

@@ -1,15 +1,11 @@
 import { Ollama } from 'ollama-node';
 
-const ollama = new Ollama('192.168.1.3');
+const ollama = new Ollama('localhost');
 
 export async function generateOrUpdateDocumentation(codeSnippet: string): Promise<string> {
-  let temporaryCodeSnippet = codeSnippet;
   try {
-    if (containsCodeBlock(codeSnippet)) {
-      temporaryCodeSnippet = codeSnippet.replaceAll('```', '{tripleBacktick}');
-    }
-    const output = await ollama.generate(temporaryCodeSnippet);
-    const response = output.output.replaceAll('{tripleBacktick}', '```');
+    const output = await ollama.generate(codeSnippet);
+    const response = output.output;
     if (containsCodeBlock(response)) {
       return extractCodeSnippet(response);
     } else {
@@ -24,8 +20,14 @@ export async function generateOrUpdateDocumentation(codeSnippet: string): Promis
 export async function initialize(): Promise<void> {
   try {
     await ollama.setModel('openchat');
-    const prompt = `As a code documentation assistant, your task is to add block-level JSDoc-style documentation to JavaScript and TypeScript files, with specific constraints. Firstly, do not modify or comment on the shebang line #!/usr/bin/env node - this line must remain untouched. Secondly, avoid adding comments to import statements. Focus your documentation on the core functional parts of the code, such as key functions, class definitions, and significant logic blocks. Your documentation should succinctly describe the purpose, parameters, and functionality of these elements. Remember, the aim is to enhance understanding and readability for those unfamiliar with the codebase, without altering the original code structure or adding line-by-line commentary.`;
+    const prompt = `Act as a code documentation assistant, focusing on JavaScript and TypeScript files. You are to enhance the provided code snippets by adding JSDoc-style comments, not line-by-line explanations. The comments should clarify:
 
+    1. Functions: Outline their objectives, parameters, and return values.
+    2. Classes: Describe the purpose of constructors, methods, and properties.
+    3. Key logic blocks: Explain the reasoning and functionality of complex or significant code segments.
+    
+    The original code structure and logic must remain completely unchanged. Avoid altering, adding, or removing any code lines, including shebang lines and import statements. Instead, concentrate solely on embedding meaningful JSDoc comments that provide insight into the code's functionality for those unfamiliar with it. Additionally, ensure that the final output, including your comments, is longer than the original code input, reflecting the added documentation.`;
+    
     await ollama.setSystemPrompt(prompt);
   } catch (error) {
     console.error(`Error in initialization: ${error}`);
