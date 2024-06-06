@@ -19,15 +19,15 @@ export async function generateOrUpdateDocumentation(codeSnippet: string): Promis
 
 export async function initialize(): Promise<void> {
   try {
-    await ollama.setModel('openchat');
+    await ollama.setModel('mixtral:latest');
     const prompt = `Act as a code documentation assistant, focusing on JavaScript and TypeScript files. You are to enhance the provided code snippets by adding JSDoc-style comments, not line-by-line explanations. The comments should clarify:
 
     1. Functions: Outline their objectives, parameters, and return values.
     2. Classes: Describe the purpose of constructors, methods, and properties.
     3. Key logic blocks: Explain the reasoning and functionality of complex or significant code segments.
-    
+
     The original code structure and logic must remain completely unchanged. Avoid altering, adding, or removing any code lines, including shebang lines and import statements. Instead, concentrate solely on embedding meaningful JSDoc comments that provide insight into the code's functionality for those unfamiliar with it. Additionally, ensure that the final output, including your comments, is longer than the original code input, reflecting the added documentation.`;
-    
+
     await ollama.setSystemPrompt(prompt);
   } catch (error) {
     console.error(`Error in initialization: ${error}`);
